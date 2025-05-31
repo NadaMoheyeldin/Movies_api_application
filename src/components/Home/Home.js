@@ -1,7 +1,8 @@
 import React from "react";
 import MyForm from "../form/form";
 
-function Home() {
+function Home(props) {
+  console.log("Home component props:", props);
   return (
     <div>
      

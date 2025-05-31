@@ -1,9 +1,10 @@
 import './App.css';
+import React from 'react';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import Home from './components/Home/Home';
 import MyForm from './components/form/form';
 import NotFound from './components/NotFound/NotFound';
-import React from 'react';
+import ToDo from './components/todo/todo';
 import MyNavbar from './components/Navbar/Navbar';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -19,6 +20,7 @@ function App() {
           <Switch>
             <Route path={"/"} component={Home} exact></Route>
             <Route path={"/login"} component={MyForm} exact></Route>
+            <Route path={"/todo"} component={ToDo}></Route>
             <Route path={"*"} component={NotFound} exact></Route>
         
           </Switch>

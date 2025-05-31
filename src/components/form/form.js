@@ -1,9 +1,10 @@
 import  { useState } from 'react';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { useHistory } from 'react-router-dom/cjs/react-router-dom.min';
 
 //form creation
-function MyForm({ onLoginSuccess }){
+function MyForm({ /*onLoginSuccess*/ }){
     // Handle change function to update state based on input field changes
     // This function is called whenever the input fields change
     // It checks which input field is being changed and updates the corresponding state
@@ -16,6 +17,7 @@ function MyForm({ onLoginSuccess }){
     const [emailError, setEmailError] = useState(''); //error state for email
     const [passwordError, setPasswordError] = useState(''); //error state for password
     const [showPassword, setShowPassword] = useState(false); 
+    const history = useHistory()
     
     // This state variable is used to toggle the visibility of the password input field
     // It is initially set to false, meaning the password will be hidden
@@ -65,9 +67,9 @@ function MyForm({ onLoginSuccess }){
     
         // If no errors, proceed with form submission logic
         console.log('Form submitted successfully with email:', email, 'and password:', password);
-
+        history.push('/todo'); // Redirect to home page after successful login  
         // Call the login success handler passed from App.js
-        onLoginSuccess(); // <-- This switches to ToDo page
+        //onLoginSuccess(); // <-- This switches to ToDo page
 
         // Reset the form fields after submission
         setEmail('');
