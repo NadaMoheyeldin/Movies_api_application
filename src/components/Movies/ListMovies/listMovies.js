@@ -4,12 +4,11 @@ import MyCard from "../MyCard/MyCard";
 import { useLocation, useHistory } from "react-router-dom";
 
 
+
 function ListMovies(){
 //list movies component
     const [popularMovies, setPopularMovies] = useState([]);
-
-    const apiKey = "29cf44b93ca83bf48d9356395476f7ad";
-
+    const [loading, setLoading] = useState(true);
 
 // State to manage the total number of pages
     const [totalPages, setTotalPages] = useState(1);
@@ -33,27 +32,38 @@ function ListMovies(){
     const searchParams = new URLSearchParams(location.search);
     const currentQuery = searchParams.get("query") || "";
 
+    const apiKey = "29cf44b93ca83bf48d9356395476f7ad";
+        // Construct the URL based on whether we are in search mode or not
+
 // Determine if we are in search mode
     const isSearchMode = !!currentQuery;
 
-    const fetchMovies = (page) => {
+    
 
-        let url = "";
-        if (isSearchMode) {
-            url = `https://api.themoviedb.org/3/search/movie?api_key=${apiKey}&query=${encodeURIComponent(currentQuery)}&page=${page}`;
-    }   else {
-            url = `https://api.themoviedb.org/3/movie/popular?api_key=${apiKey}&page=${page}`;
-    }
-        axios
-          .get(url)
-          .then((response) => {
-            setPopularMovies(response.data.results);
-            setTotalPages(response.data.total_pages); // Update totalPages
-          })
-          .catch((error) => {
-            console.error("Error fetching movies:", error);
-          });
-      };
+      useEffect(() => {
+        // This is where you would typically fetch data from an API
+        console.log("ListMovies component mounted");
+        const fetchMovies = (page) => {
+
+        
+            let url = "";
+            if (isSearchMode) {
+                url = `https://api.themoviedb.org/3/search/movie?api_key=${apiKey}&query=${encodeURIComponent(currentQuery)}&page=${page}`;
+        }   else {
+                url = `https://api.themoviedb.org/3/movie/popular?api_key=${apiKey}&page=${page}`;
+        }
+            axios
+              .get(url)
+              .then((response) => {
+                setPopularMovies(response.data.results);
+                setTotalPages(response.data.total_pages); // Update totalPages
+              })
+              .catch((error) => {
+                console.error("Error fetching movies:", error);
+              });
+          };
+        fetchMovies(currentPage);
+  }, [currentPage]);
 
       // Handle form submission
         const handleSearch = (e) => {
@@ -72,12 +82,7 @@ function ListMovies(){
       };
   
 
-    useEffect(() => {
-        // This is where you would typically fetch data from an API
-        console.log("ListMovies component mounted");
-
-        fetchMovies(currentPage);
-  }, [currentPage]);
+    
 
         // Example API call to fetch popular movies
         //axios.get('https://api.themoviedb.org/3/movie/popular?api_key=29cf44b93ca83bf48d9356395476f7ad')
@@ -101,20 +106,25 @@ function ListMovies(){
 return (
     <div className="container mt-4">
       <h1>List Movies</h1>
-
-
+  
+      {/* Show dynamic title based on search or popular */}
+      <h2>{isSearchMode ? `Results for "${currentQuery}"` : "Popular Movies"}</h2>
+  
+  
+      {/* Movie Grid */}
       <div className="row">
-      {popularMovies.length === 0 && 
-      <div className="text-center">Loading movies...</div>}
-
-        <div className="row">
-            {popularMovies.map((movie) => (
+        {popularMovies.length === 0 ? (
+          <div className="text-center">
+            {loading ? "Loading movies..." : "No movies found."}
+          </div>
+        ) : (
+          popularMovies.map((movie) => (
             <MyCard key={movie.id} movie={movie} />
-            ))}
-        </div>
-
-
-        {/* Pagination Controls */}
+          ))
+        )}
+      </div>
+  
+      {/* Pagination Controls */}
       <div className="d-flex justify-content-between align-items-center mt-4">
         <button
           className="btn btn-outline-primary"
@@ -132,10 +142,7 @@ return (
           Next
         </button>
       </div>
-        
-      </div>
     </div>
-    
   );
 
 }
