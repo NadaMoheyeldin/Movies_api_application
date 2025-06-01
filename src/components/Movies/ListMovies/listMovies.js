@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import MyCard from "./MyCard";
-
+import MyCard from "../MyCard/MyCard";
+import { Link } from "react-router-dom";
 
 function ListMovies(){
 
@@ -29,15 +29,21 @@ function ListMovies(){
     , []);
 
     // This effect runs once when the component mounts, similar to componentDidMount in class components
-    return (
-        <>
-        {
-            popularMovies.map((movie) => (
-                <MyCard key={movie.id} movie={movie} />
-            ))
-        }
-        </>
-    );
+    // ListMovies.js
+// ListMovies.js
+return (
+    <div className="container mt-4">
+      <h1>List Movies</h1>
+      <div className="row">
+        {popularMovies.map((movie) => (
+          <MyCard key={movie.id} movie={movie} />
+          
+        ))}
+        
+      </div>
+    </div>
+    
+  );
 
 }
 export default ListMovies;
