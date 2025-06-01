@@ -53,7 +53,7 @@ function MovieDetails() {
           <p><strong>Release Date:</strong> {movie.release_date || "N/A"}</p>
           <p><strong>Overview:</strong> {movie.overview || "No overview available."}</p>
           <p><strong>Rating:</strong> {movie.vote_average ? `${movie.vote_average}/10` : "Not rated yet"}</p>
-
+            <p><strong>Original language:</strong> {movie.original_language}</p>
           {/* Back Button */}
           <button onClick={() => window.history.back()} className="btn btn-primary">
             Back to Movies
