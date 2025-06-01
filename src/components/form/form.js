@@ -1,6 +1,7 @@
 import  { useState } from 'react';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import 'bootstrap/dist/css/bootstrap.min.css';
+
 import { useHistory } from 'react-router-dom/cjs/react-router-dom.min';
 
 //form creation
@@ -79,8 +80,11 @@ function MyForm({ /*onLoginSuccess*/ }){
     };
 
     return(
-        <>
-        <h1>Login Form</h1>
+        
+        <div className="d-flex justify-content-center align-items-center vh-100">
+            <div className="card shadow-sm w-100" style={{ maxWidth: "400px" }}>
+            <div className="card-body">
+            <h3 className="card-title text-center mb-4">Login</h3>
         <form onSubmit={(e) => handleSubmit(e)}>
             <label htmlFor="email">Email Address: </label>
             <input 
@@ -106,10 +110,13 @@ function MyForm({ /*onLoginSuccess*/ }){
             className={`form-control ${passwordError ? 'is-invalid': password ? 'is-valid':''}`}></input>
             
             <button 
-            type='button'
-            className='btn btn-outline-secondary'
-            onClick={()=> setShowPassword(!showPassword)}>{showPassword?'':''}<i className={`bi ${showPassword ? 'bi-eye-slash' : 'bi-eye'}`}></i>
-            </button>
+                type='button'
+                className='btn btn-outline-secondary'
+                onClick={() => setShowPassword(!showPassword)}
+                title={showPassword ? "Hide password" : "Show password"}
+                >
+                <i className={`bi ${showPassword ? 'bi-eye-slash' : 'bi-eye'}`}></i>
+                </button>
             </div>
             <br/>
             
@@ -120,7 +127,10 @@ function MyForm({ /*onLoginSuccess*/ }){
             disabled={emailError||passwordError}>Login</button><br/>
             
         </form><br/>
-        </>
+        </div>
+        </div>
+        </div>
+        
     )
 }
 export default MyForm;
