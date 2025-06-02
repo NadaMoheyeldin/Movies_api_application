@@ -1,141 +1,98 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import MyCard from "../MyCard/MyCard";
 import { useLocation, useHistory } from "react-router-dom";
-import { useDispatch } from 'react-redux';
 
+function ListMovies() {
+  const location = useLocation();
+  const history = useHistory();
 
-function ListMovies(){
+  const apiKey = "29cf44b93ca83bf48d9356395476f7ad";
 
+  // States
+  const [popularMovies, setPopularMovies] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [totalPages, setTotalPages] = useState(1);
 
-  const dispatch = useDispatch();
+  // Get query and page from URL
+  const searchParams = new URLSearchParams(location.search);
+  const currentPage = parseInt(searchParams.get("page")) || 1;
+  const currentQuery = searchParams.get("query") || "";
 
-  const addToFavorites = (movie) => {
-    dispatch({ type: 'ADD_TO_FAVORITES', payload: movie });
-  };
+  // Determine if we are in search mode
+  const isSearchMode = !!currentQuery;
 
-//list movies component
-    const [popularMovies, setPopularMovies] = useState([]);
-    const [loading, setLoading] = useState(true);
-
-// State to manage the total number of pages
-    const [totalPages, setTotalPages] = useState(1);
-
-// Using useLocation and useHistory from react-router-dom to manage pagination
-    const location = useLocation();
-    const history = useHistory();
-
-// Get the current page from the URL search parameters
-// If no page is specified, default to page 1
-//const search = new URLSearchParams(location.search);
-    const search = new URLSearchParams(location.search);
-    const currentPage = parseInt(search.get("page")) || 1;
-
-    const maxPagesToShow = 500; // Limit to 100 pages
-    const totalPagesToDisplay = Math.min(totalPages, maxPagesToShow);
-
-// State to manage the search query
-    
-    const [searchQuery, setSearchQuery] = useState("");
-    const searchParams = new URLSearchParams(location.search);
-    const currentQuery = searchParams.get("query") || "";
-
-    const apiKey = "29cf44b93ca83bf48d9356395476f7ad";
-        // Construct the URL based on whether we are in search mode or not
-
-// Determine if we are in search mode
-    const isSearchMode = !!currentQuery;
-
-    
-
-      useEffect(() => {
-        // This is where you would typically fetch data from an API
-        console.log("ListMovies component mounted");
-        const fetchMovies = (page) => {
-
-        
-            let url = "";
-            if (isSearchMode) {
-                url = `https://api.themoviedb.org/3/search/movie?api_key=${apiKey}&query=${encodeURIComponent(currentQuery)}&page=${page}`;
-        }   else {
-                url = `https://api.themoviedb.org/3/movie/popular?api_key=${apiKey}&page=${page}`;
+  // Effect to fetch movies
+  useEffect(() => {
+    const fetchMovies = async () => {
+      try {
+        setLoading(true);
+        let url = "";
+        if (isSearchMode) {
+          url = `https://api.themoviedb.org/3/search/movie?api_key=${apiKey}&query=${encodeURIComponent(currentQuery)}&page=${currentPage}`;
+        } else {
+          url = `https://api.themoviedb.org/3/movie/popular?api_key=${apiKey}&page=${currentPage}`;
         }
-            axios
-              .get(url)
-              .then((response) => {
-                setPopularMovies(response.data.results);
-                setTotalPages(response.data.total_pages); // Update totalPages
-              })
-              .catch((error) => {
-                console.error("Error fetching movies:", error);
-              });
-          };
-        fetchMovies(currentPage);
-  }, [currentPage]);
 
-      // Handle form submission
-        const handleSearch = (e) => {
-        e.preventDefault();
-        if (!searchQuery.trim()) return;
-        history.push(`?query=${encodeURIComponent(searchQuery)}&page=1`);
+        console.log("Fetching movies from:", url);
+
+        const response = await axios.get(url);
+        console.log("API Response:", response.data);
+
+        setPopularMovies(response.data.results);
+        setTotalPages(response.data.total_pages);
+      } catch (error) {
+        console.error("Error fetching movies:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchMovies();
+  }, [currentPage, currentQuery]);
+
+  // Handle form submission
+  const handleSearch = (e) => {
+    e.preventDefault();
+    if (!currentQuery.trim()) return;
+    history.push(`?query=${encodeURIComponent(currentQuery)}&page=1`);
   };
 
-      const goToPage = (newPage) => {
-        if (newPage < 1 || newPage > totalPages) return;
-    
-        history.push({
-          pathname: location.pathname,
-          search: `?page=${newPage}`,
-        });
-      };
-  
+  // Go to a specific page
+  const goToPage = (newPage) => {
+    if (newPage < 1 || newPage > totalPages) return;
+    history.push({
+      pathname: location.pathname,
+      search: `?page=${newPage}`,
+    });
+  };
 
-    
-
-        // Example API call to fetch popular movies
-        //axios.get('https://api.themoviedb.org/3/movie/popular?api_key=29cf44b93ca83bf48d9356395476f7ad')
-        //.then((response) => {
-        //    console.log(response);
-          //  console.log(response.data.results);
-            //setPopularMovies(response.data.results);
-        //})
-          
-        //.catch((error) => {
-          //  console.log(error);
-       // });
-        
-    //}
-   // , []);
-    
-
-    // This effect runs once when the component mounts, similar to componentDidMount in class components
-    // ListMovies.js
-// ListMovies.js
-return (
+  return (
     <div className="container mt-4">
       <h1>🎬 All Movies</h1>
-  
+
       {/* Show dynamic title based on search or popular */}
       <h2 className="text-center my-4">
         {isSearchMode ? `Results for "${currentQuery}"` : "Popular Movies"}
       </h2>
 
       <div className="container mt-4">
-  {/* Movie Grid */}
-  <div className="row">
-    {popularMovies.length === 0 ? (
-      <div className="col-12 text-center">
-        {loading ? "Loading movies..." : "No movies found."}
-      </div>
-    ) : (
-      popularMovies.map((movie) => (
-        <div className="col-md-3 mb-4" key={movie.id}>
-          <MyCard movie={movie} />
+        {/* Movie Grid */}
+        <div className="row">
+          {popularMovies.length === 0 ? (
+            <div className="col-12 text-center">
+              {loading ? "Loading movies..." : "No movies found."}
+            </div>
+          ) : (
+            popularMovies.map((movie) => (
+              <div className="col-md-3 mb-4" key={movie.id}>
+                <MyCard movie={movie} />
+              </div>
+            ))
+          )}
         </div>
-      ))
-    )}
-  </div>
-</div>
+      </div>
+
       <div className="d-flex justify-content-between align-items-center mt-4">
         <button
           className="btn btn-outline-primary"
@@ -144,20 +101,17 @@ return (
         >
           Previous
         </button>
-        <span>Page {currentPage} of {totalPagesToDisplay}</span>
+        <span>Page {currentPage} of {totalPages}</span>
         <button
           className="btn btn-outline-primary"
           onClick={() => goToPage(currentPage + 1)}
-          disabled={currentPage === totalPagesToDisplay}
+          disabled={currentPage === totalPages}
         >
           Next
         </button>
       </div>
-    
-      
-
     </div>
   );
-
 }
+
 export default ListMovies;
