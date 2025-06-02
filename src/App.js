@@ -9,6 +9,7 @@ import MyNavbar from './components/Navbar/Navbar';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import ListMovies from './components/Movies/ListMovies/listMovies';
 import MovieDetails from '/home/nada/react/Routing/routing/src/components/Movies/movieDetails/movieDetails.js';
+import Favourites from '/home/nada/react/Routing/routing/src/components/Movies/favourites/favourites.js';
 
 function App() {
   return (
@@ -24,8 +25,8 @@ function App() {
             <Route path={"/login"} component={MyForm} exact></Route>
             <Route path={"/todo"} component={ToDo}></Route>
             <Route path={"/list"} component={ListMovies} exact></Route>
-            <Route path="/movie/:id" component={MovieDetails } />
-
+            <Route path={"/movie/:id"} component={MovieDetails } />
+            <Route path={"/favourites"} component={Favourites} exact />
             <Route path={"*"} component={NotFound} exact></Route>
         
           </Switch>

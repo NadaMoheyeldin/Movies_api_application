@@ -1,12 +1,18 @@
 import React from 'react';
 import { Link } from 'react-router-dom'; // Use if you're using react-router-dom
 import MovieSearchBar from '/home/nada/react/Routing/routing/src/components/Searchbar/searchbar.js'; // Adjust the import path as necessary
+import { useSelector } from 'react-redux';
 
 function MyNavbar() {
+  const favorites = useSelector(state => state.favorites);
   return (
     <nav className="navbar navbar-expand-lg navbar-light bg-light">
       <div className="container-fluid">
-        <Link className="navbar-brand" to="#">Navbar</Link>
+        <Link className="navbar-brand" to="#">🎬 MovieApp</Link>
+        <Link className="badge bg-danger me-3" to=
+        '/favourites'>
+          ❤️ Favorites: {favorites.length}
+        </Link>
         <MovieSearchBar /> {/* Include the search bar here */}
         <button
           className="navbar-toggler"

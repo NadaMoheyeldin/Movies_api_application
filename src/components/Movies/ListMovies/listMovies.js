@@ -2,10 +2,18 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import MyCard from "../MyCard/MyCard";
 import { useLocation, useHistory } from "react-router-dom";
-
+import { useDispatch } from 'react-redux';
 
 
 function ListMovies(){
+
+
+  const dispatch = useDispatch();
+
+  const addToFavorites = (movie) => {
+    dispatch({ type: 'ADD_TO_FAVORITES', payload: movie });
+  };
+
 //list movies component
     const [popularMovies, setPopularMovies] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -105,26 +113,29 @@ function ListMovies(){
 // ListMovies.js
 return (
     <div className="container mt-4">
-      <h1>List Movies</h1>
+      <h1>🎬 All Movies</h1>
   
       {/* Show dynamic title based on search or popular */}
-      <h2>{isSearchMode ? `Results for "${currentQuery}"` : "Popular Movies"}</h2>
-  
-  
-      {/* Movie Grid */}
-      <div className="row">
-        {popularMovies.length === 0 ? (
-          <div className="text-center">
-            {loading ? "Loading movies..." : "No movies found."}
-          </div>
-        ) : (
-          popularMovies.map((movie) => (
-            <MyCard key={movie.id} movie={movie} />
-          ))
-        )}
+      <h2 className="text-center my-4">
+        {isSearchMode ? `Results for "${currentQuery}"` : "Popular Movies"}
+      </h2>
+
+      <div className="container mt-4">
+  {/* Movie Grid */}
+  <div className="row">
+    {popularMovies.length === 0 ? (
+      <div className="col-12 text-center">
+        {loading ? "Loading movies..." : "No movies found."}
       </div>
-  
-      {/* Pagination Controls */}
+    ) : (
+      popularMovies.map((movie) => (
+        <div className="col-md-3 mb-4" key={movie.id}>
+          <MyCard movie={movie} />
+        </div>
+      ))
+    )}
+  </div>
+</div>
       <div className="d-flex justify-content-between align-items-center mt-4">
         <button
           className="btn btn-outline-primary"
@@ -142,6 +153,9 @@ return (
           Next
         </button>
       </div>
+    
+      
+
     </div>
   );
 
