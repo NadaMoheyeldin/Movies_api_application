@@ -4,7 +4,6 @@ import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import Home from './components/Home/Home';
 import MyForm from './components/form/form';
 import NotFound from './components/NotFound/NotFound';
-import ToDo from './components/todo/todo';
 import MyNavbar from './components/Navbar/Navbar';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import ListMovies from './components/Movies/ListMovies/listMovies';
@@ -23,7 +22,6 @@ function App() {
           <Switch>
             <Route path={"/"} component={Home} exact></Route>
             <Route path={"/login"} component={MyForm} exact></Route>
-            <Route path={"/todo"} component={ToDo}></Route>
             <Route path={"/list"} component={ListMovies} exact></Route>
             <Route path={"/movie/:id"} component={MovieDetails } />
             <Route path={"/favourites"} component={Favourites} exact />

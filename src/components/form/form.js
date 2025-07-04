@@ -68,7 +68,7 @@ function MyForm({ /*onLoginSuccess*/ }){
     
         // If no errors, proceed with form submission logic
         console.log('Form submitted successfully with email:', email, 'and password:', password);
-        history.push('/todo'); // Redirect to home page after successful login  
+        history.push('/list'); // Redirect to home page after successful login  
         // Call the login success handler passed from App.js
         //onLoginSuccess(); // <-- This switches to ToDo page
 
